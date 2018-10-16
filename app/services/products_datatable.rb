@@ -4,7 +4,7 @@ class ProductsDatatable
   end
 
   def as_json(options = {})
-    { recordsTotal: Product.count,
+    { recordsTotal: products.count,
       recordsFiltered: products.total_count }
         .merge(products: ActiveModelSerializers::SerializableResource.new(products).as_json)
   end
@@ -16,7 +16,7 @@ class ProductsDatatable
   end
 
   def fetch_products
-    if @params[:search][:value].present?
+    if @params[:search].present? && @params[:search][:value].present?
       search = "%#{@params[:search][:value].downcase}%"
       Product.where('lower(producer) LIKE ?', search).page(page).per(per_page)
     else
